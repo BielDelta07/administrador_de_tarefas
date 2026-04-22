@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>To-Do-List</title>
+    <link rel="stylesheet" href="style.css">
+
 </head>
 <body>
     <header>
@@ -26,32 +28,46 @@
     </div>
 
     <footer id="Contato">
-    <p>&copy; 2026 SENAI - Shaolin Matador de Porco. Todos os direitos reservados.</p>
+    <p>&copy; 2026 SENAI - Delta. Todos os direitos reservados.</p>
     </footer>
     <script>
         let tarefas = [];
-
+        let editandoIndex = null;
         function AdicionarTarefa(){
             const input = document.getElementById('tarefaInput');
             // Função Trim é um método para juntar outros valores e tirar os espaços em branco desnecessários
             const tarefa = input.value.trim();
             if(tarefa){
-                tarefas.push(tarefa); //push é função para mexer com o array (adicionar no vetor)
+                if(editandoIndex === null){
+                    //push é função para mexer com o array (adicionar no vetor)
+                    tarefas.push(tarefa);//cria uma tarefa se não estiver criada
+                }else{
+                    tarefas[editandoIndex] = tarefa;
+                    editandoIndex = null;
+                }
                 input.value = '';
-                atualizarLista(); //função a ser criada mais tarde
+                atualizarLista();
             }
         }
         function removerTarefa(index){
-            tarefas.splice(index,1);
+            tarefas.splice(index,1);//splice apaga do vetor
             atualizarLista();
         }
+
+        function editarTarefa(index){
+            const input = document.getElementById('tarefaInput');
+            input.value = tarefas[index];
+            editandoIndex = index;
+        }
+
         function atualizarLista(){
             const lista = document.getElementById('listaTarefas');
             lista.innerHTML = '';
             tarefas.forEach((tarefa,index) => {
-                const li = document.creaateElement('li');
-                li.innerHTML = `${tarefa} <button
-                 onclick="removerTarefa(${index})">Remover</button>`;
+                const li = document.createElement('li');
+                li.innerHTML = `${tarefa} 
+                <button onclick="editarTarefa(${index})">Editar</button>
+                <button onclick="removerTarefa(${index})">Remover</button>`;
                  lista.appendChild(li);
             });
         }
